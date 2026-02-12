@@ -99,6 +99,15 @@ namespace clang {
   };
   }
 
+  namespace WORUYU {
+  enum {
+    LastTIBuiltin = clang::Builtin::FirstTSBuiltin - 1,
+#define BUILTIN(ID, TYPE, ATTRS) BI##ID,
+#include "clang/Basic/BuiltinsWORUYU.def"
+    LastTSBuiltin
+  };
+  } // namespace WORUYU
+
   /// BPF builtins
   namespace BPF {
   enum {

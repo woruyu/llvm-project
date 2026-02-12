@@ -90,6 +90,8 @@ public:
     x86,         // X86: i[3-9]86
     x86_64,      // X86-64: amd64, x86_64
     xcore,       // XCore: xcore
+    woruyuel,    // my custom backend (little endian)
+    woruyueb,    // my custom backend (big endian)
     xtensa,      // Tensilica: Xtensa
     nvptx,       // NVPTX: 32-bit
     nvptx64,     // NVPTX: 64-bit
@@ -1188,6 +1190,11 @@ public:
   bool isX32() const {
     EnvironmentType Env = getEnvironment();
     return Env == Triple::GNUX32 || Env == Triple::MuslX32;
+  }
+
+  /// Tests whether the target is WORUYU.
+  bool isWORUYU() const {
+    return getArch() == Triple::woruyuel || getArch() == Triple::woruyueb;
   }
 
   /// Tests whether the target is eBPF.

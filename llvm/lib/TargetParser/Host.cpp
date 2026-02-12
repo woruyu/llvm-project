@@ -569,6 +569,11 @@ StringRef sys::detail::getHostCPUNameForRISCV(StringRef ProcCpuinfoContent) {
       .Default("");
 }
 
+StringRef sys::detail::getHostCPUNameForWORUYU() {
+  return "woruyu";
+}
+
+
 StringRef sys::detail::getHostCPUNameForBPF() {
 #if !defined(__linux__) || !defined(__x86_64__)
   return "generic";

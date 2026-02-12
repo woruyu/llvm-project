@@ -1113,6 +1113,29 @@ public:
 };
 RISCVPrettyPrinter RISCVPrettyPrinterInst;
 
+class WORUYUPrettyPrinter : public PrettyPrinter {
+public:
+  void printInst(MCInstPrinter &IP, const MCInst *MI, ArrayRef<uint8_t> Bytes,
+                 object::SectionedAddress Address, formatted_raw_ostream &OS,
+                 StringRef Annot, MCSubtargetInfo const &STI, SourcePrinter *SP,
+                 StringRef ObjectFilename, std::vector<RelocationRef> *Rels,
+                 LiveElementPrinter &LEP) override {
+    if (SP && (PrintSource || PrintLines))
+      SP->printSourceLine(OS, Address, ObjectFilename, LEP);
+    if (LeadingAddr)
+      OS << format("%8" PRId64 ":", Address.Address / 8);
+    if (ShowRawInsn) {
+      OS << "\t";
+      dumpBytes(Bytes, OS);
+    }
+    if (MI)
+      IP.printInst(MI, Address.Address, "", STI, OS);
+    else
+      OS << "\t<unknown>";
+  }
+};
+WORUYUPrettyPrinter WORUYUPrettyPrinterInst;
+
 PrettyPrinter &selectPrettyPrinter(Triple const &Triple) {
   switch (Triple.getArch()) {
   default:

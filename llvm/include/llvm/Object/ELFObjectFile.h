@@ -1349,6 +1349,8 @@ StringRef ELFObjectFile<ELFT>::getFileFormatName() const {
       return "elf64-amdgpu";
     case ELF::EM_BPF:
       return "elf64-bpf";
+    case ELF::EM_WORUYU:
+      return "elf64-woruyu";
     case ELF::EM_VE:
       return "elf64-ve";
     case ELF::EM_LOONGARCH:

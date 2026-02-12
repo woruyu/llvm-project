@@ -836,6 +836,12 @@ std::string tools::getCPUName(const Driver &D, const ArgList &Args,
     if (const Arg *A = Args.getLastArg(options::OPT_mcpu_EQ))
       return A->getValue();
     return "";
+
+  case llvm::Triple::woruyuel:
+  case llvm::Triple::woruyueb:
+    if (const Arg *A = Args.getLastArg(options::OPT_mcpu_EQ))
+      return A->getValue();
+    return "";
   }
 }
 

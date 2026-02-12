@@ -99,6 +99,14 @@ static std::string computeAArch64DataLayout(const Triple &TT) {
 }
 
 // DataLayout: little or big endian
+static std::string computeWORUYUDataLayout(const Triple &TT) {
+  if (TT.getArch() == Triple::woruyueb)
+    return "E-m:e-p:64:64-i64:64-i128:128-n32:64-S128";
+  else
+    return "e-m:e-p:64:64-i64:64-i128:128-n32:64-S128";
+}
+
+// DataLayout: little or big endian
 static std::string computeBPFDataLayout(const Triple &TT) {
   if (TT.getArch() == Triple::bpfeb)
     return "E-m:e-p:64:64-i64:64-i128:128-n32:64-S128";
@@ -560,6 +568,9 @@ std::string Triple::computeDataLayout(StringRef ABIName) const {
   case Triple::bpfel:
   case Triple::bpfeb:
     return computeBPFDataLayout(*this);
+  case Triple::woruyuel:
+  case Triple::woruyueb:
+    return computeWORUYUDataLayout(*this);
   case Triple::csky:
     return computeCSKYDataLayout(*this);
   case Triple::dxil:

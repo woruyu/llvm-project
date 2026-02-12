@@ -39,6 +39,7 @@
 #include "Targets/WebAssembly.h"
 #include "Targets/X86.h"
 #include "Targets/XCore.h"
+#include "Targets/WORUYU.h"
 #include "Targets/Xtensa.h"
 #include "clang/Basic/Diagnostic.h"
 #include "clang/Basic/DiagnosticFrontend.h"
@@ -273,6 +274,10 @@ std::unique_ptr<TargetInfo> AllocateTarget(const llvm::Triple &Triple,
   case llvm::Triple::bpfeb:
   case llvm::Triple::bpfel:
     return std::make_unique<BPFTargetInfo>(Triple, Opts);
+
+  case llvm::Triple::woruyueb:
+  case llvm::Triple::woruyuel:
+    return std::make_unique<WORUYUTargetInfo>(Triple, Opts);
 
   case llvm::Triple::msp430:
     return std::make_unique<MSP430TargetInfo>(Triple, Opts);

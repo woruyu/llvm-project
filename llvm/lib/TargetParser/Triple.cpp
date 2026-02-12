@@ -88,6 +88,10 @@ StringRef Triple::getArchTypeName(ArchType Kind) {
   case x86_64:         return "x86_64";
   case xcore:          return "xcore";
   case xtensa:         return "xtensa";
+  case woruyuel:
+    return "woruyuel";
+  case woruyueb:
+    return "woruyueb";
   }
 
   llvm_unreachable("Invalid ArchType!");
@@ -438,6 +442,21 @@ StringRef Triple::getObjectFormatTypeName(ObjectFormatType Kind) {
   llvm_unreachable("unknown object format type");
 }
 
+static Triple::ArchType parseWORUYUArch(StringRef ArchName) {
+  if (ArchName == "woruyu") {
+    if (sys::IsLittleEndianHost)
+      return Triple::woruyuel;
+    else
+      return Triple::woruyueb;
+  } else if (ArchName == "woruyueb") {
+    return Triple::woruyueb;
+  } else if (ArchName == "woruyuel") {
+    return Triple::woruyuel;
+  } else {
+    return Triple::UnknownArch;
+  }
+}
+
 static Triple::ArchType parseBPFArch(StringRef ArchName) {
   if (ArchName == "bpf") {
     if (sys::IsLittleEndianHost)
@@ -684,6 +703,8 @@ static Triple::ArchType parseArch(StringRef ArchName) {
       return parseARMArch(ArchName);
     if (ArchName.starts_with("bpf"))
       return parseBPFArch(ArchName);
+    if (ArchName.starts_with("woruyu"))
+      return parseWORUYUArch(ArchName);
   }
 
   return AT;
@@ -1034,6 +1055,8 @@ static Triple::ObjectFormatType getDefaultFormat(const Triple &T) {
   case Triple::ve:
   case Triple::xcore:
   case Triple::xtensa:
+  case Triple::woruyuel:
+  case Triple::woruyueb:
     return Triple::ELF;
 
   case Triple::mipsel:
@@ -1798,6 +1821,8 @@ unsigned Triple::getArchPointerBitWidth(llvm::Triple::ArchType Arch) {
   case llvm::Triple::ve:
   case llvm::Triple::wasm64:
   case llvm::Triple::x86_64:
+  case Triple::woruyuel:
+  case Triple::woruyueb:
     return 64;
   }
   llvm_unreachable("Invalid architecture value");
@@ -1882,6 +1907,8 @@ Triple Triple::get32BitArchVariant() const {
   case Triple::x86:
   case Triple::xcore:
   case Triple::xtensa:
+  case Triple::woruyuel:
+  case Triple::woruyueb:
     // Already 32-bit.
     break;
 
@@ -1962,6 +1989,8 @@ Triple Triple::get64BitArchVariant() const {
   case Triple::ve:
   case Triple::wasm64:
   case Triple::x86_64:
+  case Triple::woruyuel:
+  case Triple::woruyueb:
     // Already 64-bit.
     break;
 
@@ -2368,7 +2397,7 @@ ExceptionHandling Triple::getDefaultExceptionHandling() const {
   }
 
   if (isAArch64() || isX86() || isPPC() || isMIPS() || isSPARC() || isBPF() ||
-      isRISCV() || isLoongArch())
+      isRISCV() || isLoongArch() || isWORUYU())
     return ExceptionHandling::DwarfCFI;
 
   switch (getArch()) {
